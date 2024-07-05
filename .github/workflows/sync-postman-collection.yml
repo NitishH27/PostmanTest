@@ -23,7 +23,7 @@ jobs:
       - name: Export Postman Collection
         env:
           POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
-          COLLECTION_UID: "your_collection_uid"  # Replace with your Postman collection UID
+          COLLECTION_UID: "36744739-718443f3-0c5e-489e-b61e-d91e54c3c95f"  # Replace with your Postman collection UID
           COLLECTION_FILE: "collection.json"
         run: |
           newman run "https://api.getpostman.com/collections/$COLLECTION_UID" \
