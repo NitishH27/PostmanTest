@@ -1,1 +1,38 @@
+name: Sync Postman Collection
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
+
+jobs:
+  sync-collection:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      - name: Export Postman Collection
+        env:
+          POSTMAN_API_KEY: ${{ secrets.POSTMAN_API_KEY }}
+          COLLECTION_UID: "your_collection_uid"  # Replace with your Postman collection UID
+          COLLECTION_FILE: "collection.json"
+        run: |
+          newman run "https://api.getpostman.com/collections/$COLLECTION_UID" \
+            --global-var "apiKey=$POSTMAN_API_KEY" \
+            --export collection.json --export-locals
+          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add collection.json
+          git commit -m "Automated collection export"
+          git push origin main
 
